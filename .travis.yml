@@ -7,11 +7,9 @@ services:
 before_install:
   - make clean
 
-install:
-  - export GOPATH="${TRAVIS_BUILD_DIR}/Godeps/_workspace:$GOPATH"
-  - export PATH="${TRAVIS_BUILD_DIR}/Godeps/_workspace/bin:$PATH"
-  
 script:
   - go env
   - go version
+  - mkdir -p /home/travis/gopath/src/github.com/servicebroker
+  - ln -s $PWD /home/travis/gopath/src/github.com/servicebroker/servicebroker
   - make all
