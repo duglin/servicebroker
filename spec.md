@@ -342,13 +342,18 @@ The `:instance_id` of a service instance is provided by the platform. This ID wi
 | plan_id*  | string  | The ID of the plan (from the catalog) for which the service instance has been requested. Must be unique to a service.  |
 |  parameters |  JSON object | Configuration options for the service instance. Controller treats this as a blob. Note that there are (conventions)[https://docs.cloudfoundry.org/services/catalog-metadata.html] in existing brokers and controllers for fields that aid in the display of catalog data. |
 |  accepts_incomplete | boolean  | A value of true indicates that the marketplace and its clients support asynchronous broker operations. If this parameter is not included in the request, and the broker can only provision an instance of the requested plan asynchronously, the broker should reject the request with a 422 as described below.  |
-| organization_guid*  | string  | The platform GUID for the organization under which the service is to be provisioned. Although most brokers will not use this field, it may be helpful for executing operations on a user's behalf.  |
-|  space_guid* |  string |  The identifier for the project space within the platform organization. Although most brokers will not use this field, it may be helpful for executing operations on a user's behalf. |
+| context*  | object  | Platform specific contextual information under which the service is to be provisioned. Although most brokers will not use this field, it could be helpful in determining data placement or applying custom business rules. `context` will replace `organization_guid` and `space_guid` in future versions of the specification - in the interim both SHOULD be used to ensure interoperability with old and new implementations.|
+| organization_guid*  | string  | Deprecated in favor of `context`. The platform GUID for the organization under which the service is to be provisioned. Although most brokers will not use this field, it may be helpful for executing operations on a user's behalf.  |
+|  space_guid* |  string |  Deprecated in favor of `context`. The identifier for the project space within the platform organization. Although most brokers will not use this field, it may be helpful for executing operations on a user's behalf. |
 
 \* Fields with an asterisk are required.
 
 <pre class="terminal">
 {
+  "context": {
+    "platform": "cloundfoundry",
+    "some_field": "some-contextual-data"
+  },
   "service_id": "service-guid-here",
   "plan_id": "plan-guid-here",
   "organization_guid": "org-guid-here",
@@ -363,6 +368,10 @@ The `:instance_id` of a service instance is provided by the platform. This ID wi
 ##### cURL #####
 <pre class="terminal">
 $ curl http://username:password@broker-url/v2/service_instances/:instance_id -d '{
+  "context": {
+    "platform": "cloudfoundry",
+    "some_field": "some-contextual-data"
+  },
   "service_id": "service-guid-here",
   "plan_id": "plan-guid-here",
   "organization_guid": "org-guid-here",
@@ -433,8 +442,9 @@ Not all permutations of plan changes are expected to be supported. For example, 
 | previous\_values  | object  |  Information about the instance prior to the update. |
 | previous\_values.service_id  | string  | ID of the service for the instance.  |
 | previous\_values.plan_id  |  string | ID of the plan prior to the update.  |
-| previous\_values.organization_id  | string  | ID of the organization specified for the instance.  |
-| previous\_values.space_id  | string  | ID of the space specified for the instance.  |
+| previous\_values.context  | object  | Contextual data under which the instance is created. `context` will replace `organization_guid` and `space_guid` in future versions of the specification - in the interim both SHOULD be used to ensure interoperability with old and new implementations. |
+| previous\_values.organization_id  | string  | Deprecated in favor of `previous\_values.context`. ID of the organization specified for the instance.  |
+| previous\_values.space_id  | string  | Deprecated in favor of `previous\_values.context`. ID of the space specified for the instance.  |
 
 \* Fields with an asterisk are required.
 
@@ -449,6 +459,10 @@ Not all permutations of plan changes are expected to be supported. For example, 
   "previous_values": {
     "plan_id": "old-plan-guid-here",
     "service_id": "service-guid-here",
+	"context": {
+	  "platform": "cloudfoundry",
+	  "some_field": "some-contextual-data"
+	},
     "organization_id": "org-guid-here",
     "space_id": "space-guid-here"
   }
@@ -467,6 +481,10 @@ $ curl http://username:password@broker-url/v2/service_instances/:instance_id -d 
   "previous_values": {
     "plan_id": "old-plan-guid-here",
     "service_id": "service-guid-here",
+	"context": {
+	  "platform": "cloudfoundry",
+	  "some_field": "some-contextual-data"
+	},
     "organization_id": "org-guid-here",
     "space_id": "space-guid-here"
   }
