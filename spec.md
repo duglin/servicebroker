@@ -435,21 +435,25 @@ Not all permutations of plan changes are expected to be supported. For example, 
 
 | Request Field  | Type  |  Description |
 |---|---|---|
+| context  | object  | Contextual data under which the instance is created. `context` will replace `organization_guid` and `space_guid` in future versions of the specification - in the interim both SHOULD be used to ensure interoperability with old and new implementations. |
 | service\_id*  | string  | The ID of the service (from the catalog). Must be globally unique.  |
 | plan\_id  | string  | The ID of the plan (from the catalog) for which the service instance has been requested. Must be unique to a service.  |
 | parameters  | JSON object  | Configuration options for the service instance. An opaque object, controller treats this as a blob. |
 | accepts\_incomplete  |  boolean | A value of true indicates that the marketplace and its clients support asynchronous broker operations. If this parameter is not included in the request, and the broker can only provision an instance of the requested plan asynchronously, the broker should reject the request with a 422 as described below.  |
 | previous\_values  | object  |  Information about the instance prior to the update. |
-| previous\_values.service_id  | string  | ID of the service for the instance.  |
+| previous\_values.service_id  | string  | Deprecated as it was redundant information. ID of the service for the instance.  |
 | previous\_values.plan_id  |  string | ID of the plan prior to the update.  |
-| previous\_values.context  | object  | Contextual data under which the instance is created. `context` will replace `organization_guid` and `space_guid` in future versions of the specification - in the interim both SHOULD be used to ensure interoperability with old and new implementations. |
-| previous\_values.organization_id  | string  | Deprecated in favor of `previous\_values.context`. ID of the organization specified for the instance.  |
-| previous\_values.space_id  | string  | Deprecated in favor of `previous\_values.context`. ID of the space specified for the instance.  |
+| previous\_values.organization_id  | string  | Deprecated in favor of `context`. ID of the organization specified for the instance.  |
+| previous\_values.space_id  | string  | Deprecated in favor of `context`. ID of the space specified for the instance.  |
 
 \* Fields with an asterisk are required.
 
 <pre class="terminal">
 {
+  "context": {
+    "platform": "cloudfoundry",
+    "some_field": "some-contextual-data"
+  },
   "service_id": "service-guid-here",
   "plan_id": "plan-guid-here",
   "parameters": {
@@ -459,10 +463,6 @@ Not all permutations of plan changes are expected to be supported. For example, 
   "previous_values": {
     "plan_id": "old-plan-guid-here",
     "service_id": "service-guid-here",
-	"context": {
-	  "platform": "cloudfoundry",
-	  "some_field": "some-contextual-data"
-	},
     "organization_id": "org-guid-here",
     "space_id": "space-guid-here"
   }
@@ -472,6 +472,10 @@ Not all permutations of plan changes are expected to be supported. For example, 
 ##### cURL #####
 <pre class="terminal">
 $ curl http://username:password@broker-url/v2/service_instances/:instance_id -d '{
+  "context": {
+    "platform": "cloudfoundry",
+    "some_field": "some-contextual-data"
+  },
   "service_id": "service-guid-here",
   "plan_id": "plan-guid-here",
   "parameters": {
@@ -481,10 +485,6 @@ $ curl http://username:password@broker-url/v2/service_instances/:instance_id -d 
   "previous_values": {
     "plan_id": "old-plan-guid-here",
     "service_id": "service-guid-here",
-	"context": {
-	  "platform": "cloudfoundry",
-	  "some_field": "some-contextual-data"
-	},
     "organization_id": "org-guid-here",
     "space_id": "space-guid-here"
   }

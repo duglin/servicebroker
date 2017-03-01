@@ -80,7 +80,7 @@ The following sections define the set of properties that each Platform
 defines and in which API call they MUST appear.
 
 Aside from the Platform specific properties, there is one common top-level
-property called `platform` that MUST also appear within `context` to 
+property called `platform` that MUST also appear within `context` to
 indicate which Platform is being used.
 
 The `platform` property MUST be a `string` and serialized as follows:<br>
