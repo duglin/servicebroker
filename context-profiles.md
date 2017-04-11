@@ -123,7 +123,6 @@ The following table specifies which properties MUST appear in each API:
 
 Request API | Properties
 ----------- | ----------
-`POST /v2/service_plan_visibilities` | `organization_guid`
 `PUT /v2/service_instances/:instance_id` | `organization_guid`<br>`space_guid`
 `PATCH /v2/service_instances/:instance_id` | `organization_guid`<br>`space_guid`
 
@@ -146,7 +145,7 @@ part of a Cloud Foundry API call:
 The following properties are defined for usage within a Kubernetes deployment:
 
 - `namespace`<br>
-  The name of the Kubernetes namespace into which the service instance
+  The name of the Kubernetes namespace in which the service instance
   will be visible. This property MUST be a string serialized as follows:
 
   ```
@@ -161,7 +160,6 @@ The following table specifies which properties MUST appear in each API:
 
 Request API | Properties
 ----------- | ----------
-`POST /v2/service_plan_visibilities` | `namespace`
 `PUT /v2/service_instances/:instance_id` | `namespace`
 `PATCH /v2/service_instances/:instance_id` | `namespace`
 
