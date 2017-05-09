@@ -351,7 +351,7 @@ The `:instance_id` of a service instance is provided by the platform. This ID wi
 <pre class="terminal">
 {
   "context": {
-    "platform": "cloundfoundry",
+    "platform": "cloudfoundry",
     "some_field": "some-contextual-data"
   },
   "service_id": "service-guid-here",
